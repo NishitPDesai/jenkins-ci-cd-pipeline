@@ -1,52 +1,63 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "jenkins-simple-app"
+        CONTAINER_NAME = "jenkins-simple-app"
+        PORT = "3000"
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Clean workspace to avoid leftover Git issues
-                deleteDir()
+                echo "Cleaning workspace and checking out repo..."
+                deleteDir() // ensures no leftover files cause Git issues
 
-                // Proper checkout using Git plugin
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/main']], 
-                    doGenerateSubmoduleConfigurations: false, 
-                    extensions: [], 
-                    userRemoteConfigs: [[url: 'https://github.com/NishitPDesai/jenkins-ci-cd-pipeline.git']]] )
+                // Proper Git checkout
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/NishitPDesai/jenkins-ci-cd-pipeline.git'
+                    ]]
+                ])
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t jenkins-simple-app .'
+                echo "Building Docker image..."
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo "Running tests..."
+                // Replace this with real tests later
                 sh 'echo "All tests passed!"'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying container...'
-                sh '''
-                docker ps -q --filter "name=jenkins-simple-app" | grep -q . && docker stop jenkins-simple-app || true
-                docker run -d --rm --name jenkins-simple-app -p 3000:3000 jenkins-simple-app
-                '''
+                echo "Deploying Docker container..."
+                // Stop and remove old container if exists
+                sh """
+                docker ps -q --filter "name=${CONTAINER_NAME}" | grep -q . && docker stop ${CONTAINER_NAME} || true
+                docker run -d --rm --name ${CONTAINER_NAME} -p ${PORT}:${PORT} ${IMAGE_NAME}
+                """
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo "Pipeline completed successfully!"
         }
         failure {
-            echo 'Pipeline failed!'
+            echo "Pipeline failed!"
         }
     }
 }
