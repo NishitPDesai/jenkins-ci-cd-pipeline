@@ -1,0 +1,21 @@
+{
+  "name": "jenkins-ci-cd-pipeline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NishitPDesai/jenkins-ci-cd-pipeline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NishitPDesai/jenkins-ci-cd-pipeline/issues"
+  },
+  "homepage": "https://github.com/NishitPDesai/jenkins-ci-cd-pipeline#readme"
+}
