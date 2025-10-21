@@ -4,6 +4,13 @@ pipeline
 
   stages 
   {
+     stage('Checkout') 
+     {
+        steps 
+        {
+            git branch: 'main', url: 'https://github.com/NishitPDesai/jenkins-ci-cd-pipeline.git'
+        }
+    }
     stage('Build') 
     {
       steps 
